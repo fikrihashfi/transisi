@@ -49,7 +49,7 @@ class Dasar{
     }
 
     public function printCountLowerCase($sentence){
-        echo $sentence." mengandung ".$this->countLowerCase($sentence)." buah huruf kecil.";
+        echo '"'.$sentence.'"'." mengandung ".$this->countLowerCase($sentence)." buah huruf kecil.";
     }
 
     public function unigram($sentence){
@@ -94,9 +94,9 @@ class Dasar{
     }
 
     public function uniBiTriGram($sentence){
-        echo 'Unigram : '.$this->unigram($sentence).'<br>
-        Bigram : '.$this->bigram($sentence).'<br>
-        Trigram : '.$this->trigram($sentence);
+        echo '<ul><li>Unigram : '.$this->unigram($sentence).'</li>
+        <li>Bigram : '.$this->bigram($sentence).'</li>
+        <li>Trigram : '.$this->trigram($sentence).'</li></ul>';
     }
 
     public function table(){
@@ -138,6 +138,21 @@ class Dasar{
         echo $this->encrypt($string);
     }
 
+    public function cari($arr, $search){
+        $split = str_split($search);
+        $all = array();
+        for($i=0; $i<count($arr); $i++){
+            $all = array_merge($all,$arr[$i]);
+        }
+
+        foreach($split as $s){
+            if(!in_array($s,$all)){
+                return false;
+            }
+        }
+
+        return true;
+    }
 
 
 }
@@ -145,11 +160,19 @@ class Dasar{
 $dasar = new Dasar();
 $nilai = "72 65 73 78 75 74 90 81 87 65 55 69 72 78 79 91 100 40 67 77 86";
 $sentence = "Jakarta adalah ibukota negara Republik Indonesia";
-// $dasar->meanHighestLowest($nilai);
-// $dasar->uniBiTriGram($sentence);
-// $dasar->table();
+$arr = [
+    ['f', 'g', 'h', 'i'],
+    ['j', 'k', 'p', 'q'],
+    ['r', 's', 't', 'u']
+   ];   
+$dasar->meanHighestLowest($nilai);
+$dasar->uniBiTriGram($sentence);
+$dasar->table();
 $dasar->printCountLowerCase("TranSISI");
-// $dasar->printEncrypt("DFHKNQ");
+echo "<br>";
+$dasar->printEncrypt("DFHKNQ");
+echo "<br>";
+var_dump($dasar->cari($arr, 'fjrstp'));
 
 
 ?>
