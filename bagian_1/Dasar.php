@@ -115,6 +115,25 @@ class Dasar{
         echo "</table>";
     }
 
+    public function encrypt($string){
+        $encrypted = '';
+        $split = str_split($string);
+        foreach($split as $idx => $s){
+            $ascii = ord($s);
+            if(($idx+1)%2==0){
+                $encrypted.=chr($ascii-($idx+1));
+            }
+            else{
+                $encrypted.=chr($ascii+($idx+1));
+            }
+        }
+        return $encrypted;
+    }
+
+    public function printEncrypt($string){
+        echo $this->encrypt($string);
+    }
+
 }
 
 $dasar = new Dasar();
@@ -122,7 +141,8 @@ $nilai = "72 65 73 78 75 74 90 81 87 65 55 69 72 78 79 91 100 40 67 77 86";
 $sentence = "Jakarta adalah ibukota negara Republik Indonesia";
 // $dasar->meanHighestLowest($nilai);
 // $dasar->uniBiTriGram($sentence);
-$dasar->table();
+// $dasar->table();
+$dasar->printEncrypt("DFHKNQ");
 
 
 ?>
