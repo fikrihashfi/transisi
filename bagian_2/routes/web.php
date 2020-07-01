@@ -17,6 +17,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('/companies', 'CompaniesController@index')->name('companies.index');
+    Route::post('/companies/create', 'CompaniesController@create')->name('companies.create');
+});
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

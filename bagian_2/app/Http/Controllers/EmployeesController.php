@@ -15,6 +15,9 @@ class EmployeesController extends Controller
     public function index()
     {
         //
+        $allUsers = Employees::paginate(15);
+        return view('companies.index', $allUsers);
+
     }
 
     /**
