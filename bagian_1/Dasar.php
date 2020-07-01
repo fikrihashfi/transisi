@@ -45,7 +45,11 @@ class Dasar{
 
     public function countLowerCase($sentence){
         preg_match_all('/[a-z]/', $sentence, $matches);
-        return $matches[0];
+        return count($matches[0]);
+    }
+
+    public function printCountLowerCase($sentence){
+        echo $sentence." mengandung ".$this->countLowerCase($sentence)." buah huruf kecil.";
     }
 
     public function unigram($sentence){
@@ -134,6 +138,8 @@ class Dasar{
         echo $this->encrypt($string);
     }
 
+
+
 }
 
 $dasar = new Dasar();
@@ -142,7 +148,8 @@ $sentence = "Jakarta adalah ibukota negara Republik Indonesia";
 // $dasar->meanHighestLowest($nilai);
 // $dasar->uniBiTriGram($sentence);
 // $dasar->table();
-$dasar->printEncrypt("DFHKNQ");
+$dasar->printCountLowerCase("TranSISI");
+// $dasar->printEncrypt("DFHKNQ");
 
 
 ?>
