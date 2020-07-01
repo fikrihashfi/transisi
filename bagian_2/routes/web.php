@@ -20,6 +20,8 @@ Route::get('/', function () {
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/companies', 'CompaniesController@index')->name('companies.index');
     Route::post('/companies/create', 'CompaniesController@create')->name('companies.create');
+    Route::post('/companies/update', 'CompaniesController@update')->name('companies.edit');
+    Route::post('/companies/delete', 'CompaniesController@delete')->name('companies.delete');
 });
 
 Auth::routes();

@@ -1,8 +1,8 @@
 <div class="modal fade" id="companyForm" tabindex="-1" role="dialog" aria-labelledby="companyForm" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="companyFormTitle">Create Company</h5>
+      <div class="modal-header" style="background-color:green;">
+        <h5 class="modal-title text-white" id="companyFormTitle">Create Company</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -14,7 +14,7 @@
                             <label for="nama" class="col-md-4 col-form-label text-md-right">Nama</label>
 
                             <div class="col-md-6">
-                                <input id="nama" type="text" class="form-control @error('nama') is-invalid @enderror" name="nama" value="{{ old('nama') }}" required autocomplete="nama" autofocus>
+                                <input id="nama" type="text" class="form-control @error('nama') is-invalid @enderror" name="nama" value="{{ old('nama') }}" required autocomplete="nama">
 
                                 @error('nama')
                                     <span class="invalid-feedback" role="alert">
@@ -42,7 +42,7 @@
                             <label for="website" class="col-md-4 col-form-label text-md-right">Website</label>
 
                             <div class="col-md-6">
-                                <input id="website" type="text" class="form-control @error('website') is-invalid @enderror" name="website" value="{{ old('website') }}" required autocomplete="website" autofocus>
+                                <input id="website" type="text" class="form-control @error('website') is-invalid @enderror" name="website" value="{{ old('website') }}" required autocomplete="website">
 
                                 @error('website')
                                     <span class="invalid-feedback" role="alert">
@@ -56,7 +56,7 @@
                             <label for="logo" class="col-md-4 col-form-label text-md-right">Logo</label>
 
                             <div class="col-md-6">
-                                <input  name="logo" type="file" class="form-control @error('logo') is-invalid @enderror" required>
+                                <input name="logo" type="file" class="form-control @error('logo') is-invalid @enderror" required>
                                 <span class="text-muted">max : 2mb</span>
 
                                 @error('logo')
@@ -68,10 +68,11 @@
                         </div>
                         
 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Save</button>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn text-white" style="background-color:green">Save</button>
+                </div>
+            </form>
         </div>
     </div>
   </div>

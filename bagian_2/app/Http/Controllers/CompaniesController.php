@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Companies;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class CompaniesController extends Controller
@@ -35,13 +37,9 @@ class CompaniesController extends Controller
             'website' => 'required'
         ]);
 
-        // 'image_header' => 'required|mimes:jpeg,jpg,png|max:500',
-        // 'logo' => 'mimes:jpeg,jpg,png|max:500',
-        // dd($id_leader);
-
         if ($validated_data->fails()) {
             $status =array(
-                'modal' => '_form',
+                'modal' => '_create',
                 'class' => 'alert-danger',
                 'message' => "Form Validation Failed"
             ) ;
@@ -67,7 +65,13 @@ class CompaniesController extends Controller
                 return redirect()->route('companies.index');
             }
             else{
-                return redirect()->route('companies.index');
+                $status =array(
+                    'modal' => '_create',
+                    'class' => 'alert-danger',
+                    'message' => "Failed Create Company!"
+                ) ;
+                $request->flash();
+                return redirect()->route('companies.index')->with($status);
             }
         }
         
@@ -116,16 +120,99 @@ class CompaniesController extends Controller
     public function update(Request $request, Companies $companies)
     {
         //
+        $all_data = $request->all();
+        if(isset($all_data['logo'])){
+            $validated_data= Validator::make($all_data, [
+                'nama' => 'required',
+                'email' => 'required',
+                'logo' => 'required|mimes:png|max:2000|dimensions:min_width=100,min_height=100',
+                'website' => 'required'
+            ]);
+        }
+        else{
+            $validated_data= Validator::make($all_data, [
+                'nama' => 'required',
+                'email' => 'required',
+                'website' => 'required'
+            ]);
+        }
+
+        if ($validated_data->fails()) {
+            $status =array(
+                'modal' => '_edit',
+                'class' => 'alert-danger',
+                'message' => "Form Validation Failed"
+            ) ;
+            $request->flash();
+            return redirect()->route('companies.index')->withErrors($validated_data)->with($status);
+        }
+        else{
+            $company = Companies::find($all_data['id']);
+            if(isset($all_data['logo'])){
+                $file_logo = $request->file('logo');
+                $nama_file_logo = time()."_".$file_logo->getClientOriginalName();
+                $tujuan_upload_logo = 'company';
+                $file_logo->move($tujuan_upload_logo,$nama_file_logo);
+                $all_data['logo'] = $nama_file_logo;
+            }
+            unset($all_data['_token']);
+            $status = Companies::where('id', $all_data['id'])
+                    ->update($all_data);
+            
+            if($status==true){
+                return redirect()->route('companies.index');
+            }
+            else{
+                $status =array(
+                    'modal' => '_edit',
+                    'class' => 'alert-danger',
+                    'message' => "Edit company failed!"
+                ) ;
+                $request->flash();
+                return redirect()->route('companies.index')->with($status);
+            }
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Companies  $companies
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Companies $companies)
+    public function delete(Request $request)
     {
         //
+        $company = Companies::find($request->input('id'));
+        if($company!=null){
+            $file = $company->logo;
+            $result = DB::transaction(function() use(&$file,&$company) {
+                $delete_file = Storage::delete('company/'.$file);
+                $delete_data = $company->delete();
+                return true;
+            });
+
+            if($result==true){
+                return redirect()->route('companies.index');
+            }
+            else{
+                $status =array(
+                    'modal' => '_delete',
+                    'class' => 'alert-danger',
+                    'message' => "Delete Failed"
+                ) ;
+                $request->flash();
+                return redirect()->route('companies.index')->with($status);
+            }
+        }
+        else{
+            $status =array(
+                'modal' => '_delete',
+                'class' => 'alert-danger',
+                'message' => "company not found!"
+            ) ;
+            $request->flash();
+            return redirect()->route('companies.index')->with($status);
+        }
     }
 }
