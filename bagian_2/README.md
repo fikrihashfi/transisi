@@ -16,3 +16,6 @@
 - Login menggunakan username dan password sebagai berikut :
     - user => username : `admin@transisi.id`, password:`transisi`  
 - Jika tidak dapat mengakses user, silahkan migrasi dan seed ulang dengan `php artisan migrate:fresh --seed` atau `php artisan migrate:refresh --seed`
+
+## Sample tampilan jika berhasil
+<img src="https://github.com/fikrihashfi/mencariJalan/blob/master/sample%20success.png" width="400">
