@@ -7,9 +7,9 @@
 - Nyalakan **MySQL** pastikan database sudah dibuat.
 - Jalankan `composer install`, `php artisan migrate --seed` / `php artisan migrate:fresh --seed`
 - Lalu jalankan `php artisan key:generate`
-- Jalankan `npm install && npm run dev`
-- Jalankan `php artisan serve` untuk menjalankan Laravel dengan port `127.0.0.1:8000` (jika belum menghidupkan web server)
-- Jalankan perintah  `php artisan storage:link`
+- Jalankan `php artisan serve` untuk menjalankan Laravel dengan port `127.0.0.1:8000`
+- Jalankan `npm install && npm run dev` jika diperlukan 
+- Jalankan perintah  `php artisan storage:link` jika storage tidak dapat diakses
 
 ## Akses User
 - Akses user pada laman /login
