@@ -5,7 +5,8 @@
 ## Cara Install
 - copy .env.example , lalu rename menjadi .env
 - Nyalakan **MySQL** pastikan database sudah dibuat.
-- Lalu jalankan `composer install`, `php artisan migrate --seed`
+- Lalu jalankan `php artisan key:generate`
+- jalankan `composer install`, `php artisan migrate --seed`
 - Jalankan `npm install && npm run dev`
 - Jalankan `php artisan serve` untuk menjalankan Laravel dengan port `127.0.0.1:8000` (jika belum menghidupkan web server)
 - Jalankan perintah  `php artisan storage:link`
