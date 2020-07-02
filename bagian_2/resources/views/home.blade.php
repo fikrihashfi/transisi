@@ -15,6 +15,10 @@
                     @endif
 
                     {{ __('You are logged in!') }}
+                    <div class="d-flex flex-row align-items-center justify-content-center m-2">
+                        <a class="btn btn-success text-white m-1" href="{{route('companies.index')}}">Company</a>
+                        <a class="btn btn-primary text-white m-1" href="{{route('employees.index')}}">Employee</a>
+                    </div>
                 </div>
             </div>
         </div>
