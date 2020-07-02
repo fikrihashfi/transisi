@@ -9,10 +9,11 @@
             <div class="card-body">
             @if (session('message'))
 			    <div class="alert {{ session('class') }}">
+                    <input id="errorId" data-modalid="{{ session('modal') }}" hidden>
 				    {{ session('message') }}
 				</div>
 			@endif
-                <a class="btn btn-success text-white" style="margin-bottom:10px"  data-action="{{route('companies.create')}}" data-title="Create Company" data-toggle="modal" data-target="#companyModal" > + Add Company</a>
+                <a id="create" class="btn btn-success text-white" style="margin-bottom:10px"  data-action="{{route('companies.create')}}" data-title="Create Company" data-toggle="modal" data-target="#companyModal" > + Add Company</a>
                 <div class="table-responsive">
                     <table class="table text-center">
                         <tr>
@@ -29,8 +30,8 @@
                             <td><a href="{{ asset('company').'/'.$c->logo }}">Lihat</a></td>
                             <td>{{ $c->website }}</td>
                             <td class="text-white">
-                                <a class="btn btn-primary" data-action="" data-title="Detail Company" data-toggle="modal" data-target="#companyModal" data-values="{{$c}}">Detail</a>
-                                <a class="btn" data-action="{{route('companies.edit')}}" style="background-color:orange;" data-title="Edit Company" data-toggle="modal" data-target="#companyModal" data-values="{{$c}}">Edit</a>
+                                <a class="btn btn-primary" id="detail{{$c->id}}" data-action="" data-title="Detail Company" data-toggle="modal" data-target="#companyModal" data-values="{{$c}}">Detail</a>
+                                <a class="btn" id="edit{{$c->id}}"  data-action="{{route('companies.edit')}}" style="background-color:orange;" data-title="Edit Company" data-toggle="modal" data-target="#companyModal" data-values="{{$c}}">Edit</a>
                                 <a class="btn btn-danger" data-toggle="modal" data-target="#companyDelete" data-values="{{$c->id}}">Delete</a>
                             </td>
                         </tr>
@@ -48,27 +49,24 @@
 
 
 @section('js')
-    @if (count($errors) > 0)
-        <script type="text/javascript">
-            $( document ).ready(function() {
-                $('#companyModal').modal('show');
-            });
-        </script>
-    @endif
-
     <script>
     $( document ).ready(function() {
-        $('#companyModal').on('show.bs.modal',function(event){
-            var btn = $(event.relatedTarget);
+        function init(event=null, from){
+            var btn = $(event);
             var data = btn.data('values');
-            console.log(data);
             var action = btn.data('action');
             var title = btn.data('title');
             $('#companyForm').attr('action',action);
             $('#companyTitle').text(title);
             $('#companyBtnSubmit').show();
             $('#companyForm input').attr('disabled',false);   
-            $('#companyForm input').not("#companyForm input[name=_token]").val('');  
+            if(from=='btn'){
+                $('#companyForm input').not("#companyForm input[name=_token]").val('');  
+                $.each($('#companyForm input'), function( index, value ) {
+                    $(value).removeClass('is-invalid');
+                });
+            }
+            $('#companyLogoContainer').children().show();
             if(data!=null){
                 $('#companyNama').val(data.nama);
                 $('#companyEmail').val(data.email);
@@ -78,6 +76,7 @@
 
             if(title=='Detail Company'){
                 $('#companyBtnSubmit').hide();
+                $('#companyLogoContainer').children().hide();
                 $('#companyForm input').attr('disabled',true);
                 $('#companyTitle').parent().css({'background-color':'#3490dc','color':'white'});
             }
@@ -87,6 +86,12 @@
             else{
                 $('#companyTitle').parent().css({'background-color':'green','color':'white'});
             }
+        }
+        
+        $('#companyModal').on('show.bs.modal',function(event){
+            if(event.relatedTarget!=null){
+                init(event.relatedTarget,'btn');
+            }
         });
 
         $('#companyDelete').on('show.bs.modal',function(event){
@@ -95,6 +100,12 @@
 
             $('#deleteId').val(data);          
         });
+        
+        if($('#errorId').data('modalid')!=null && $('#errorId').data('modalid')!=""){
+            init('#'+$('#errorId').data('modalid'),'server');
+            $('#companyModal').modal('show');
+        }
+        
     });      
     </script>
 @endsection

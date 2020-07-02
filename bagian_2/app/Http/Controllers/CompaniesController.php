@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Companies;
+use App\Employees;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -23,7 +24,6 @@ class CompaniesController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -39,7 +39,7 @@ class CompaniesController extends Controller
 
         if ($validated_data->fails()) {
             $status =array(
-                'modal' => '_create',
+                'modal' => 'create',
                 'class' => 'alert-danger',
                 'message' => "Form Validation Failed"
             ) ;
@@ -66,7 +66,6 @@ class CompaniesController extends Controller
             }
             else{
                 $status =array(
-                    'modal' => '_create',
                     'class' => 'alert-danger',
                     'message' => "Failed Create Company!"
                 ) ;
@@ -75,39 +74,6 @@ class CompaniesController extends Controller
             }
         }
         
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Companies  $companies
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Companies $companies)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Companies  $companies
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Companies $companies)
-    {
-        //
     }
 
     /**
@@ -139,7 +105,7 @@ class CompaniesController extends Controller
 
         if ($validated_data->fails()) {
             $status =array(
-                'modal' => '_edit',
+                'modal' => 'edit'.$all_data['id'],
                 'class' => 'alert-danger',
                 'message' => "Form Validation Failed"
             ) ;
@@ -164,7 +130,6 @@ class CompaniesController extends Controller
             }
             else{
                 $status =array(
-                    'modal' => '_edit',
                     'class' => 'alert-danger',
                     'message' => "Edit company failed!"
                 ) ;
@@ -183,6 +148,15 @@ class CompaniesController extends Controller
     public function delete(Request $request)
     {
         //
+        if(Employees::where('companies_id',$request->input('id'))->first()!=null){
+            $status =array(
+                'class' => 'alert-danger',
+                'message' => "This company id is used by employee!"
+            ) ;
+            $request->flash();
+            return redirect()->route('companies.index')->with($status);
+        }
+        
         $company = Companies::find($request->input('id'));
         if($company!=null){
             $file = $company->logo;

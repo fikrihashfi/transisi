@@ -25,7 +25,6 @@ class EmployeesController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -40,6 +39,7 @@ class EmployeesController extends Controller
 
         if ($validated_data->fails()) {
             $status =array(
+                'modal' => 'create',
                 'class' => 'alert-danger',
                 'message' => "Form Validation Failed"
             ) ;
@@ -72,39 +72,6 @@ class EmployeesController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Employees  $employees
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Employees $employees)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Employees  $employees
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Employees $employees)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -114,16 +81,81 @@ class EmployeesController extends Controller
     public function update(Request $request, Employees $employees)
     {
         //
+        $all_data = $request->all();
+        $validated_data= Validator::make($all_data, [
+            'nama' => 'required',
+            'email' => 'required',
+            'company' => 'required'
+        ]);
+
+        if ($validated_data->fails()) {
+            $status =array(
+                'modal' => 'edit'.$all_data['id'],
+                'class' => 'alert-danger',
+                'message' => "Form Validation Failed"
+            ) ;
+            $request->flash();
+            return redirect()->route('employees.index')->withErrors($validated_data)->with($status);
+        }
+        else{
+            $all_data['companies_id'] = $all_data['company'];
+            unset($all_data['company']);
+            unset($all_data['_token']);
+            $status = $employees->where('id', $all_data['id'])
+                    ->update($all_data);
+            
+            if($status==true){
+                return redirect()->route('employees.index');
+            }
+            else{
+                $status =array(
+                    'class' => 'alert-danger',
+                    'message' => "Failed Update Employee!"
+                ) ;
+                $request->flash();
+                return redirect()->route('employees.index')->with($status);
+            }
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Employees  $employees
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function delete(Employees $employees)
+    public function delete(Request $request)
     {
         //
+        $employee = Employees::find($request->input('id'));
+        if($employee!=null){
+            $result = DB::transaction(function() use(&$employee) {
+                $delete_data = $employee->delete();
+                return true;
+            });
+
+            if($result==true){
+                return redirect()->route('employees.index');
+            }
+            else{
+                $status =array(
+                    'modal' => '_delete',
+                    'class' => 'alert-danger',
+                    'message' => "Delete Failed"
+                ) ;
+                $request->flash();
+                return redirect()->route('employees.index')->with($status);
+            }
+
+        }
+        else{
+            $status =array(
+                'modal' => '_delete',
+                'class' => 'alert-danger',
+                'message' => "company not found!"
+            ) ;
+            $request->flash();
+            return redirect()->route('employees.index')->with($status);
+        }
     }
 }

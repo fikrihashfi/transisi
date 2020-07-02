@@ -9,10 +9,11 @@
             <div class="card-body">
             @if (session('message'))
 			    <div class="alert {{ session('class') }}">
+                    <input id="errorId" data-modalid="{{ session('modal') }}" hidden>
 				    {{ session('message') }}
 				</div>
 			@endif
-                <a id="createBtn" class="btn btn-success text-white" style="margin-bottom:10px" data-company="{{$companies}}"  data-action="{{route('employees.create')}}" data-title="Create Employee" data-toggle="modal" data-target="#employeeModal" > + Add Employee</a>
+                <a id="create" class="btn btn-success text-white" style="margin-bottom:10px" data-company="{{$companies}}"  data-action="{{route('employees.create')}}" data-title="Create Employee" data-toggle="modal" data-target="#employeeModal" > + Add Employee</a>
                 <div class="table-responsive">
                     <table class="table text-center">
                         <tr>
@@ -27,8 +28,8 @@
                             <td>{{ $e->email }}</td>
                             <td>{{ $e->companies->nama }}</td>
                             <td class="text-white">
-                                <a class="btn btn-primary" data-action="" data-title="Detail Employee" data-toggle="modal" data-target="#employeeModal" data-values="{{$e}}">Detail</a>
-                                <a class="btn" data-action="{{route('employees.edit')}}" style="background-color:orange;" data-title="Edit Employee" data-toggle="modal" data-target="#employeeModal" data-values="{{$e}}">Edit</a>
+                                <a class="btn btn-primary" id="detail{{$e->id}}"  data-action="" data-title="Detail Employee" data-toggle="modal" data-target="#employeeModal" data-values="{{$e}}">Detail</a>
+                                <a class="btn" id="edit{{$e->id}}"  data-action="{{route('employees.edit')}}" style="background-color:orange;" data-title="Edit Employee" data-toggle="modal" data-target="#employeeModal" data-values="{{$e}}">Edit</a>
                                 <a class="btn btn-danger" data-toggle="modal" data-target="#employeeDelete" data-values="{{$e->id}}">Delete</a>
                             </td>
                         </tr>
@@ -48,8 +49,8 @@
 @section('js')
     <script>
     $( document ).ready(function() {
-        $('#employeeModal').on('show.bs.modal',function(event){
-            var btn = $(event.relatedTarget);
+        function init(event=null,from){
+            var btn = $(event);
             var data = btn.data('values');
             console.log(data);
             var action = btn.data('action');
@@ -57,7 +58,12 @@
             companyOption();
             $('#employeeForm').attr('action',action);
             $('#employeeTitle').text(title);
-            $('#employeeForm input').not("#employeeForm input[name=_token]").val('');  
+            if(from=='btn'){
+                $('#employeeForm input').not("#employeeForm input[name=_token]").val('');  
+                $.each($('#employeeForm input'), function( index, value ) {
+                    $(value).removeClass('is-invalid');
+                });
+            }
             $('#employeeBtnSubmit').show();
             $('#employeeForm input').attr('disabled',false);
             $('#employeeForm select').attr('disabled',false);
@@ -80,8 +86,14 @@
             else{
                 $('#employeeTitle').parent().css({'background-color':'green','color':'white'});
             }
-        });
+        }
 
+        $('#employeeModal').on('show.bs.modal',function(event){
+            if(event.relatedTarget!=null){
+                init(event.relatedTarget,'btn');
+            }
+        });
+           
         $('#employeeDelete').on('show.bs.modal',function(event){
             var btn = $(event.relatedTarget);
             var data = btn.data('values');
@@ -90,7 +102,7 @@
         });
 
         function companyOption(){
-            var company = $('#createBtn').data('company');
+            var company = $('#create').data('company');
             $("#employeeCompany option").remove();
             $("#employeeCompany").append(new Option("Select Company", ""));
             $.each(company,function(index,value){
@@ -99,15 +111,13 @@
                 $("#employeeCompany").append(companyOption);
             })
         }
+
+        if($('#errorId').data('modalid')!=null && $('#errorId').data('modalid')!=""){
+            console.log($('#errorId').data('modalid'));
+            init('#'+$('#errorId').data('modalid'),'server');
+            $('#employeeModal').modal('show');
+        }
+        
     });      
     </script>
-
-      @if (count($errors) > 0)
-        <script type="text/javascript">
-            $( document ).ready(function() {
-                $('#employeeModal').modal('show');
-                companyOption();
-            });
-        </script>
-    @endif
 @endsection

@@ -53,7 +53,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        <div id="companyLogoContainer" class="form-group row">
                             <label for="companyLogo" class="col-md-4 col-form-label text-md-right">Logo</label>
 
                             <div class="col-md-6">
