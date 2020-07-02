@@ -18,4 +18,4 @@
 - Jika tidak dapat mengakses user, silahkan migrasi dan seed ulang dengan `php artisan migrate:fresh --seed` atau `php artisan migrate:refresh --seed`
 
 ## Sample tampilan jika berhasil
-<img src="https://github.com/fikrihashfi/mencariJalan/blob/master/sample%20success.png" width="400">
+<img src="https://github.com/fikrihashfi/mencariJalan/blob/master/bagian_2/sample%20success.png" width="400">
