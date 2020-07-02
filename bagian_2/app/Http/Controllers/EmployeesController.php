@@ -139,7 +139,6 @@ class EmployeesController extends Controller
             }
             else{
                 $status =array(
-                    'modal' => '_delete',
                     'class' => 'alert-danger',
                     'message' => "Delete Failed"
                 ) ;
@@ -150,9 +149,8 @@ class EmployeesController extends Controller
         }
         else{
             $status =array(
-                'modal' => '_delete',
                 'class' => 'alert-danger',
-                'message' => "company not found!"
+                'message' => "employee not found!"
             ) ;
             $request->flash();
             return redirect()->route('employees.index')->with($status);

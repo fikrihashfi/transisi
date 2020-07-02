@@ -171,7 +171,6 @@ class CompaniesController extends Controller
             }
             else{
                 $status =array(
-                    'modal' => '_delete',
                     'class' => 'alert-danger',
                     'message' => "Delete Failed"
                 ) ;
@@ -181,7 +180,6 @@ class CompaniesController extends Controller
         }
         else{
             $status =array(
-                'modal' => '_delete',
                 'class' => 'alert-danger',
                 'message' => "company not found!"
             ) ;
