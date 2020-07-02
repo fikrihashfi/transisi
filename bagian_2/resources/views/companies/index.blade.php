@@ -3,7 +3,7 @@
 @section('content')
     <div style="display:flex; flex-direction:column; align-items:center; justify-content:center">
         <div class="card" style="width:70%;">
-            <div class="card-header">
+            <div class="card-header bg-dark text-white">
                 Companies
             </div>
             <div class="card-body">
@@ -12,7 +12,7 @@
 				    {{ session('message') }}
 				</div>
 			@endif
-                <a class="btn btn-success text-white" style="margin-bottom:10px" data-toggle="modal" data-target="#companyForm" > + Add Company</a>
+                <a class="btn btn-success text-white" style="margin-bottom:10px"  data-action="{{route('companies.create')}}" data-title="Create Company" data-toggle="modal" data-target="#companyModal" > + Add Company</a>
                 <div class="table-responsive">
                     <table class="table text-center">
                         <tr>
@@ -29,8 +29,8 @@
                             <td><a href="{{ asset('company').'/'.$c->logo }}">Lihat</a></td>
                             <td>{{ $c->website }}</td>
                             <td class="text-white">
-                                <a class="btn btn-primary" data-toggle="modal" data-target="#companyDetail" data-values="{{$c}}">View</a>
-                                <a class="btn" style="background-color:orange;" data-toggle="modal" data-target="#companyEdit" data-values="{{$c}}">Edit</a>
+                                <a class="btn btn-primary" data-action="" data-title="Detail Company" data-toggle="modal" data-target="#companyModal" data-values="{{$c}}">Detail</a>
+                                <a class="btn" data-action="{{route('companies.edit')}}" style="background-color:orange;" data-title="Edit Company" data-toggle="modal" data-target="#companyModal" data-values="{{$c}}">Edit</a>
                                 <a class="btn btn-danger" data-toggle="modal" data-target="#companyDelete" data-values="{{$c->id}}">Delete</a>
                             </td>
                         </tr>
@@ -41,50 +41,52 @@
             </div>
         </div>
     </div>
-    @include('companies._create')
-    @include('companies._edit')
     @include('companies._delete')
-    @include('companies._detail')
+    @include('companies._form')
 
 @endsection
 
 
 @section('js')
-    @if (count($errors) > 0 && $modal = Session::get('modal'))
-        @if($modal=="_create")
+    @if (count($errors) > 0)
         <script type="text/javascript">
             $( document ).ready(function() {
-                $('#companyForm').modal('show');
+                $('#companyModal').modal('show');
             });
         </script>
-        @elseif($modal=="_edit")
-        <script type="text/javascript">
-            $( document ).ready(function() {
-                $('#companyEdit').modal('show');
-            });
-        </script>
-        @endif
     @endif
 
     <script>
     $( document ).ready(function() {
-        $('#companyEdit').on('show.bs.modal',function(event){
+        $('#companyModal').on('show.bs.modal',function(event){
             var btn = $(event.relatedTarget);
             var data = btn.data('values');
+            console.log(data);
+            var action = btn.data('action');
+            var title = btn.data('title');
+            $('#companyForm').attr('action',action);
+            $('#companyTitle').text(title);
+            $('#companyBtnSubmit').show();
+            $('#companyForm input').attr('disabled',false);   
+            $('#companyForm input').not("#companyForm input[name=_token]").val('');  
+            if(data!=null){
+                $('#companyNama').val(data.nama);
+                $('#companyEmail').val(data.email);
+                $('#companyWebsite').val(data.website);  
+                $('#companyId').val(data.id);      
+            }
 
-            $('#editNama').val(data.nama);
-            $('#editEmail').val(data.email);
-            $('#editWebsite').val(data.website);  
-            $('#editId').val(data.id);      
-        });
-
-        $('#companyDetail').on('show.bs.modal',function(event){
-            var btn = $(event.relatedTarget);
-            var data = btn.data('values');
-
-            $('#detailNama').val(data.nama);
-            $('#detailEmail').val(data.email);
-            $('#detailWebsite').val(data.website);      
+            if(title=='Detail Company'){
+                $('#companyBtnSubmit').hide();
+                $('#companyForm input').attr('disabled',true);
+                $('#companyTitle').parent().css({'background-color':'#3490dc','color':'white'});
+            }
+            else if(title=='Edit Company'){
+                $('#companyTitle').parent().css({'background-color':'orange','color':'white'});
+            }
+            else{
+                $('#companyTitle').parent().css({'background-color':'green','color':'white'});
+            }
         });
 
         $('#companyDelete').on('show.bs.modal',function(event){

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Employees;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class EmployeesController extends Controller
 {
@@ -15,8 +17,10 @@ class EmployeesController extends Controller
     public function index()
     {
         //
-        $allUsers = Employees::paginate(15);
-        return view('companies.index', $allUsers);
+        $data['employees'] = Employees::paginate(5);
+        $data['companies'] = DB::table('companies')->select('nama', 'id')->get();
+
+        return view('employees.index', $data);
 
     }
 
@@ -25,9 +29,46 @@ class EmployeesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         //
+        $validated_data= Validator::make($request->all(), [
+            'nama' => 'required',
+            'email' => 'required',
+            'company' => 'required'
+        ]);
+
+        if ($validated_data->fails()) {
+            $status =array(
+                'class' => 'alert-danger',
+                'message' => "Form Validation Failed"
+            ) ;
+            $request->flash();
+            return redirect()->route('employees.index')->withErrors($validated_data)->with($status);
+        }
+        else{
+
+            $employee = Employees::create([
+                'nama' => $request->input('nama'),
+                'email' => $request->input('email'),
+                'companies_id' => $request->input('company'),
+            ]);
+            
+            $status = $employee->save();
+            
+            if($status==true){
+                return redirect()->route('employees.index');
+            }
+            else{
+                $status =array(
+                    'class' => 'alert-danger',
+                    'message' => "Failed Create Employee!"
+                ) ;
+                $request->flash();
+                return redirect()->route('employees.index')->with($status);
+            }
+        }
+        
     }
 
     /**
@@ -81,7 +122,7 @@ class EmployeesController extends Controller
      * @param  \App\Employees  $employees
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Employees $employees)
+    public function delete(Employees $employees)
     {
         //
     }

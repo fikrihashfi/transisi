@@ -1,19 +1,21 @@
-<div class="modal fade" id="companyDetail" tabindex="-1" role="dialog" aria-labelledby="companyDetail" aria-hidden="true">
+<div class="modal fade" id="employeeModal" tabindex="-1" role="dialog" aria-labelledby="employeeModal" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-header" style="background-color:orange;">
-        <h5 class="modal-title text-white" id="companyDetailTitle">Detail Company</h5>
+      <div class="modal-header">
+        <h5 class="modal-title" id="employeeTitle">employee</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
+        <form id="employeeForm" method="POST" action="" enctype="multipart/form-data">
                         @csrf
+                        <input id="employeeId" value="" name="id" hidden>
                         <div class="form-group row">
-                            <label for="detailNama" class="col-md-4 col-form-label text-md-right">Nama</label>
+                            <label for="employeeNama" class="col-md-4 col-form-label text-md-right">Nama</label>
 
                             <div class="col-md-6">
-                                <input id="detailNama" type="text" class="form-control @error('nama') is-invalid @enderror" name="nama" value="{{ old('nama') }}" required autocomplete="nama">
+                                <input id="employeeNama" type="text" class="form-control @error('nama') is-invalid @enderror" name="nama" value="{{ old('nama') }}" required autocomplete="nama">
 
                                 @error('nama')
                                     <span class="invalid-feedback" role="alert">
@@ -24,10 +26,10 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="detailEmail" class="col-md-4 col-form-label text-md-right">E-Mail</label>
+                            <label for="employeeEmail" class="col-md-4 col-form-label text-md-right">E-Mail</label>
 
                             <div class="col-md-6">
-                                <input id="detailEmail" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
+                                <input id="employeeEmail" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
 
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
@@ -38,12 +40,14 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="detailWebsite" class="col-md-4 col-form-label text-md-right">Website</label>
+                            <label for="employeeCompany" class="col-md-4 col-form-label text-md-right">Company</label>
 
                             <div class="col-md-6">
-                                <input id="detailWebsite" type="text" class="form-control @error('website') is-invalid @enderror" name="website" value="{{ old('website') }}" required autocomplete="website">
+                            <select id="employeeCompany" name="company" class="form-control @error('company') is-invalid @enderror" value="{{ old('company') }}" required>
+                                <option value="">Select Company</option>
+                            </select>
 
-                                @error('website')
+                                @error('company')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -51,18 +55,11 @@
                             </div>
                         </div>
 
-                        <!-- <div class="form-group row">
-                            <label for="detailLogo" class="col-md-4 col-form-label text-md-right">Logo</label>
-
-                            <div class="col-md-6">
-                                
-                            </div>
-                        </div>
-                         -->
-
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="employeeBtnSubmit" type="submit" class="btn btn-success">Save Change</button>
                 </div>
+            </form>
         </div>
     </div>
   </div>

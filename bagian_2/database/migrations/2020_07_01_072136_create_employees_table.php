@@ -17,12 +17,12 @@ class CreateEmployeesTable extends Migration
             $table->id();
             $table->string('nama');
             $table->string('email');
-            $table->unsignedBigInteger('company')->index();
+            $table->unsignedBigInteger('companies_id')->index();
             $table->timestamps();
         });
 
         Schema::table('employees', function($table) {
-            $table->foreign('company')
+            $table->foreign('companies_id')
             ->references('id')->on('companies');
         });
     }

@@ -12,7 +12,7 @@ class Companies extends Model
     protected $fillable = ['nama','email','logo','website'];
 
 
-    public function company()
+    public function employees()
     {
         return $this->hasMany('App\Employees');
     }

@@ -22,7 +22,7 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
@@ -55,6 +55,13 @@
                                    Company
                                 </a>
                             </li>
+
+                             <li class="nav-item">
+                                <a id="navbarItem" class="nav-link" href="{{route('employees.index')}}" role="button">
+                                   Employee
+                                </a>
+                            </li>
+
                             <li class="nav-item dropdown">
 
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
