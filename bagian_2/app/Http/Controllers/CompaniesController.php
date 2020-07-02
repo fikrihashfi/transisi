@@ -34,7 +34,7 @@ class CompaniesController extends Controller
             'nama' => 'required',
             'email' => 'required',
             'logo' => 'required|mimes:png|max:2000|dimensions:min_width=100,min_height=100',
-            'website' => 'required'
+            'website' => 'required|regex:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/'
         ]);
 
         if ($validated_data->fails()) {
@@ -92,14 +92,14 @@ class CompaniesController extends Controller
                 'nama' => 'required',
                 'email' => 'required',
                 'logo' => 'required|mimes:png|max:2000|dimensions:min_width=100,min_height=100',
-                'website' => 'required'
+                'website' => 'required|regex:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/'
             ]);
         }
         else{
             $validated_data= Validator::make($all_data, [
                 'nama' => 'required',
                 'email' => 'required',
-                'website' => 'required'
+                'website' => 'required|regex:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/'
             ]);
         }
 
